@@ -25,14 +25,17 @@ class LFUCache(BaseCaching):
         if len(caches) > BaseCaching.MAX_ITEMS:
             max = BaseCaching.MAX_ITEMS
             lfu = sorted(self.usage_history.items(),
-                         key=lambda item: item[1],
-                         reverse=True
+                         key=lambda item: item[1]
                          )[0][0]
             print(f"DISCARD: {lfu}")
             del caches[lfu]
             self.usage_history.pop(lfu)
-
-        self.usage_history[key] = 1
+            # print(f">>> DEBUG full({key}): {self.usage_history}")
+        if key not in self.usage_history:
+            self.usage_history[key] = 1
+        else:
+            self.usage_history[key] += 1
+        # print(f">>> DEBUG put({key}): {self.usage_history}")
 
     def get(self, key):
         """ Get an item by key
@@ -42,4 +45,5 @@ class LFUCache(BaseCaching):
 
         if key in self.usage_history:
             self.usage_history[key] += 1
+            # print(f">>> DEBUG get({key}): {self.usage_history}")
         return self.cache_data[key]
