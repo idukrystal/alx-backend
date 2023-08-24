@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-''' Create a class FIFOCache that inherits
+''' Create a clas,s LIFOCache that inherits
 from BaseCaching and is a caching system:
 '''
 
@@ -7,7 +7,7 @@ from BaseCaching and is a caching system:
 BaseCaching = __import__("base_caching").BaseCaching
 
 
-class FIFOCache(BaseCaching):
+class LIFOCache(BaseCaching):
     ''' A Fifo  Cacheing Class  '''
 
     def put(self, key, item):
@@ -17,7 +17,7 @@ class FIFOCache(BaseCaching):
         if key is not None and item is not None:
             caches[key] = item
         if len(caches) > BaseCaching.MAX_ITEMS:
-            deleted_key = list(caches.keys())[0]
+            deleted_key = list(caches.keys())[BaseCaching.MAX_ITEMS - 1]
             print(f"DISCARD: {deleted_key}")
             del caches[deleted_key]
 
