@@ -28,10 +28,10 @@ class MRUCache(BaseCaching):
 
         if len(caches) > BaseCaching.MAX_ITEMS:
             max = BaseCaching.MAX_ITEMS
-            mru = self.usage_history[0]
-            print(f"DISCARD: {lru}")
-            del caches[lru]
-            self.usage_history.remove(lru)
+            mru = self.usage_history[1]
+            print(f"DISCARD: {mru}")
+            del caches[mru]
+            self.usage_history.remove(mru)
 
     def get(self, key):
         """ Get an item by key
