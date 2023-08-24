@@ -24,7 +24,10 @@ class LFUCache(BaseCaching):
 
         if len(caches) > BaseCaching.MAX_ITEMS:
             max = BaseCaching.MAX_ITEMS
-            lfu = list(sorted(self.usage_history.keys()))[0]
+            lfu = sorted(self.usage_history.items(),
+                         key=lambda item: item[1],
+                         reverse=True
+                         )[0][0]
             print(f"DISCARD: {lfu}")
             del caches[lfu]
             self.usage_history.pop(lfu)
