@@ -3,7 +3,7 @@
 Main file
 """
 
-Server = __import__('1-simple_pagination').Server
+Server = __import__('2-hypermedia_pagination').Server
 
 server = Server()
 
@@ -24,11 +24,15 @@ except AssertionError:
 
 
 def a(b):
-    for c in b:
+    for c in b.items():
         print(c)
     print("____________")
 
-a(server.dataset())
-a(server.get_page(3, 2))
-a(server.get_page(3000, 100))
-
+print(server.dataset())
+a(server.get_hyper(1, 2))
+print("---")
+a(server.get_hyper(2, 2))
+print("---")
+a(server.get_hyper(100, 3))
+print("---")
+a(server.get_hyper(3000, 100))
