@@ -46,5 +46,5 @@ class Server:
         indexes = index_range(page, page_size)
         book = self.dataset()
         if indexes[1] < len(book):
-            return book[indexes[0]: indexes[1]]
+            return book[indexes[0]: indexes[1] - 1]
         return []
