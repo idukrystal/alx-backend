@@ -23,6 +23,12 @@ except AssertionError:
     print("AssertionError raised when page and/or page_size are not ints")
 
 
-print(server.dataset())
-print(server.get_page(3, 2))
-print(server.get_page(3000, 100))
+def a(b):
+    for c in b:
+        print(c)
+    print("____________")
+
+a(server.dataset())
+a(server.get_page(3, 2))
+a(server.get_page(3000, 100))
+
