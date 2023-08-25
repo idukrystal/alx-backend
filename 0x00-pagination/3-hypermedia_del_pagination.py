@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+"""
+Deletion-resilient hypermedia pagination
+"""
+
+
+import csv
+import math
+from typing import List, Dict
+
+
+class Server:
+    """Server class to paginate a database of popular baby names.
+    """
+    DATA_FILE = "Popular_Baby_Names.csv"
+
+    def __init__(self):
+        self.__dataset = None
+        self.__indexed_dataset = None
+        self.__reindexed_dataset = {}
+
+    def dataset(self) -> List[List]:
+        """Cached dataset
+        """
+        if self.__dataset is None:
+            with open(self.DATA_FILE) as f:
+                reader = csv.reader(f)
+                dataset = [row for row in reader]
+            self.__dataset = dataset[1:]
+
+        return self.__dataset
+
+    def indexed_dataset(self) -> Dict[int, List]:
+        """Dataset indexed by sorting position, starting at 0
+        """
+        if self.__indexed_dataset is None:
+            dataset = self.dataset()
+            truncated_dataset = dataset[:1000]
+            self.__indexed_dataset = {
+                i: dataset[i] for i in range(len(dataset))
+            }
+        return self.__indexed_dataset
+
+    def updated_dataset(self) -> Dict[int, List]:
+        indexed_dataset = self.indexed_dataset();
+        if self.__reindexed_dataset != indexed_dataset:
+            i = 0
+            self.__reindexed_dataset.clear()
+            for index in indexed_dataset:
+                self.__reindexed_dataset[i] = indexed_dataset[index]
+                i += 1
+        return self.__reindexed_dataset
+
+
+    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
+        indexed_data = self.updated_dataset()
+        assert index >= 0 and index < len(indexed_data)
+        if (index + page_size) < len(indexed_data):
+            next_index = index + page_size
+        else:
+            next_index = None
+        dict = {
+            "index": index,
+            "data": [indexed_data[i] for i in range(index, index + page_size)],
+            "page_size": page_size,
+            "next_index": next_index
+        }
+        return dict
+
+#server = Server()
+#print(server.indexed_dataset)
