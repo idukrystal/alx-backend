@@ -54,15 +54,19 @@ class Server:
 
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
         """ returns details of a page """
-        indexed_data = self.updated_dataset()
+        indexed_data = self.indexed_dataset()
+        real_index = index
         assert index >= 0 and index < len(indexed_data)
-        if (index + page_size) < len(indexed_data):
-            next_index = index + page_size
+        while indexed_data.get(real_index) is None:
+            real_index += 1
+        if (real_index + page_size) < len(indexed_data):
+            next_index = real_index + page_size
         else:
             next_index = None
+        data = [indexed_data[i] for i in range(real_index, real_index + page_size)]
         dict = {
             "index": index,
-            "data": [indexed_data[i] for i in range(index, index + page_size)],
+            "data": data,
             "page_size": page_size,
             "next_index": next_index
         }
