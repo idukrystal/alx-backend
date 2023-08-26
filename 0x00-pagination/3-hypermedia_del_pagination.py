@@ -42,7 +42,8 @@ class Server:
         return self.__indexed_dataset
 
     def updated_dataset(self) -> Dict[int, List]:
-        indexed_dataset = self.indexed_dataset();
+        """ returns updated dataset if indexed dataset changes """
+        indexed_dataset = self.indexed_dataset()
         if self.__reindexed_dataset != indexed_dataset:
             i = 0
             self.__reindexed_dataset.clear()
@@ -51,8 +52,8 @@ class Server:
                 i += 1
         return self.__reindexed_dataset
 
-
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
+        """ returns details of a page """
         indexed_data = self.updated_dataset()
         assert index >= 0 and index < len(indexed_data)
         if (index + page_size) < len(indexed_data):
@@ -66,6 +67,3 @@ class Server:
             "next_index": next_index
         }
         return dict
-
-#server = Server()
-#print(server.indexed_dataset)
