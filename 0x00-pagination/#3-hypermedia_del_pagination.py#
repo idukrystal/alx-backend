@@ -63,8 +63,8 @@ class Server:
             next_index = real_index + page_size
         else:
             next_index = None
-        data = [
-            indexed_data[i] for i in range(real_index, real_index + page_size)]
+        data = []
+        for indexed_data[i] for i in range(real_index, real_index + page_size)]
         dict = {
             "index": index,
             "data": data,
