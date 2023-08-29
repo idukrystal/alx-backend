@@ -27,7 +27,7 @@ def get_locale() -> str:
     incoming_request = request.query_string.decode('utf-8').split('&')
     request_table = dict(map(
         lambda x: (x if '=' in x else '{}='.format(x)).split('='),
-        incoming_requests,
+        incoming_request,
     ))
 
     if 'locale' in request_table:
