@@ -21,15 +21,15 @@ babel = Babel(app)
 
 
 @babel.localeselector
-def get_locale():
+def get_locale() -> str:
     """ Selects best language for user  """
 
-    return request.accept_languages.best_match(app["LANGUAGES"])
+    return request.accept_languages.best_match(app.config["LANGUAGES"])
 
 
 @app.route('/')
 @app.route('/index')
-def index():
+def index() -> str:
     """ Renders homepage of web app uses babel to support translation """
 
     return render_template("3-index.html")
