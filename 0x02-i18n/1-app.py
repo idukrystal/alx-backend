@@ -9,7 +9,7 @@ class Config:
     """ Configuratuon class for babel """
 
     LANGUAGES = ["en", "fr"]
-    BABEL_DEFAULT_LOCALE = Config.LANGUAGES[0]
+    BABEL_DEFAULT_LOCALE = LANGUAGES[0]
     BABEL_DEFAULT_TIMEZONE = "UTC"
 
 
