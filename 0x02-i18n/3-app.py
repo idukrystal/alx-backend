@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """ A simple flask apllication with flask_babel """
 
