@@ -15,11 +15,14 @@ class Config:
     LANGUAGES = ["en", "fr"]
 
 
+app.config.from_object(Config)
+babel.BABEL_DEFAULT_LOCALE = Config.LANGUAGES[0]
+babel.BABEL_DEFAULT_TIMEZONE = "UTC"
+
+
 @app.route('/')
 @app.route('/index')
 def index():
     """ Renders homepage of web app uses babe to support i18b """
-    babel.BABEL_DEFAULT_LOCALE = Config.LANGUAGES[0]
-    babel.BABEL_DEFAULT_TIMEZONE = "UTC"
 
     return render_template("1-index.html")
