@@ -16,7 +16,7 @@ class Config:
 
 
 @app.route('/')
-@app.route('/indez')
+@app.route('/index')
 def index():
     """ Renders homepage of web app uses babe to support i18b """
     babel.BABEL_DEFAULT_LOCALE = Config.LANGUAGES[0]
