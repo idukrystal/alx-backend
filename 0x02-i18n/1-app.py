@@ -4,20 +4,20 @@
 from flask import Flask, render_template
 from flask_babel import Babel
 
-app = Flask(__name__)
-
-babel = Babel(app)
-
 
 class Config:
     """ Configuratuon class for babel """
 
     LANGUAGES = ["en", "fr"]
+    BABEL_DEFAULT_LOCALE = Config.LANGUAGES[0]
+    BABEL_DEFAULT_TIMEZONE = "UTC"
 
+
+app = Flask(__name__)
 
 app.config.from_object(Config)
-babel.BABEL_DEFAULT_LOCALE = Config.LANGUAGES[0]
-babel.BABEL_DEFAULT_TIMEZONE = "UTC"
+
+babel = Babel(app)
 
 
 @app.route('/')
