@@ -54,8 +54,9 @@ def get_locale() -> str:
     if 'locale' in request_table:
         if request_table['locale'] in app.config["LANGUAGES"]:
             return request_table['locale']
-    if g.user is not None:
-        locale = g.user.get('locale')
+    user = get_user()
+    if user:
+        locale = user.get('locale')
         if locale is not None and locale in app.config["LANGUAGES"]:
             return user.get('locale')
     locale = request.headers.get('locale')
