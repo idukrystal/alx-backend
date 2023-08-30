@@ -43,7 +43,7 @@ def before_request() -> None:
     """ Excutes befofe app start tries to get a user """
     user = get_user()
     if user is not None:
-        g.user = use8r
+        g.user = user
 
 
 @babel.localeselector
