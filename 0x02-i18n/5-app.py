@@ -5,6 +5,7 @@ from flask import Flask, g, render_template, request
 from flask_babel import Babel
 from typing import Dict, Union
 
+
 class Config:
     """ Configuratuon class for babel """
 
@@ -42,7 +43,7 @@ def before_request() -> None:
     """ Excutes befofe app start tries to get a user """
     user = get_user()
     if user is not None:
-        g.user = user
+        g.user = use8r
 
 
 @babel.localeselector
