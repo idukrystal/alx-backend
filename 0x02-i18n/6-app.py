@@ -1,31 +1,23 @@
 #!/usr/bin/env python3
-"""
-Flask app
-"""
-from flask import (
-    Flask,
-    render_template,
-    request,
-    g
-)
+""" A simple flask apllication with flask_babel """
+
+from flask import Flask, g, render_template, request
 from flask_babel import Babel
-from typing import (
-    Dict,
-    Union
-)
+from typing import Dict, Union
 
 
-class Config(object):
-    """
-    Configuration for Babel
-    """
+class Config:
+    """ Configuratuon class for babel """
+
     LANGUAGES = ["en", "fr"]
-    BABEL_DEFAULT_LOCALE = "en"
+    BABEL_DEFAULT_LOCALE = LANGUAGES[0]
     BABEL_DEFAULT_TIMEZONE = "UTC"
 
 
 app = Flask(__name__)
+
 app.config.from_object(Config)
+
 babel = Babel(app)
 
 
@@ -38,50 +30,43 @@ users = {
 
 
 def get_user() -> Union[Dict, None]:
-    """
-    Returns a user dictionary or None if ID value can't be found
-    or if 'login_as' URL parameter was not found
-    """
-    id = request.args.get('login_as', None)
-    if id and int(id) in users.keys():
-        return users.get(int(id))
+    """ returns user details from http request """
+    if "login_as" in request.args:
+        login_id = request.args["login_as"]
+        if login_id.isdigit() and int(login_id) in users:
+            return users[int(login_id)]
     return None
 
 
 @app.before_request
-def before_request():
-    """
-    Add user to flask.g if user is found
-    """
+def before_request() -> None:
+    """ Excutes befofe app start tries to get a user """
     user = get_user()
-    g.user = user
+    if user is not None:
+        g.user = user
 
 
 @babel.localeselector
-def get_locale():
-    """
-    Select and return best language match based on supported languages
-    """
-    loc = request.args.get('locale')
-    if loc in app.config['LANGUAGES']:
-        return loc
-    if g.user:
-        loc = g.user.get('locale')
-        if loc and loc in app.config['LANGUAGES']:
-            return loc
-    loc = request.headers.get('locale', None)
-    if loc in app.config['LANGUAGES']:
-        return loc
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
+def get_locale() -> str:
+    """ Selects best language for user  """
+
+    request_table = request.args
+    if 'locale' in request_table:
+        if request_table['locale'] in app.config["LANGUAGES"]:
+            return request_table['locale']
+    if g.user is not None:
+        locale = g.user.get('locale')
+        if locale is not None and locale in app.config["LANGUAGES"]:
+            return user.get('locale')
+    locale = request.headers.get('locale')
+    if locale in app.config["LANGUAGES"]:
+        return locale
+    return request.accept_languages.best_match(app.config["LANGUAGES"])
 
 
-@app.route('/', strict_slashes=False)
+@app.route('/')
+@app.route('/index')
 def index() -> str:
-    """
-    Handles / route
-    """
-    return render_template('5-index.html')
+    """ Renders homepage of web app uses babel to support translation """
 
-
-if __name__ == "__main__":
-    app.run(port="5000", host="0.0.0.0", debug=True)
+    return render_template("5-index.html")
