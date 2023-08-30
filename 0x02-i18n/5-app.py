@@ -3,7 +3,7 @@
 
 from flask import Flask, g, render_template, request
 from flask_babel import Babel
-
+from typing import Dict, Union
 
 class Config:
     """ Configuratuon class for babel """
@@ -28,7 +28,7 @@ users = {
 }
 
 
-def get_user():
+def get_user() -> Union[Dict, None]:
     """ returns user details from http request """
     if "login_as" in request.args:
         login_id = request.args["login_as"]
