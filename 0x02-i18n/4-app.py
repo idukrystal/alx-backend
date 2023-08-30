@@ -24,12 +24,7 @@ babel = Babel(app)
 def get_locale() -> str:
     """ Selects best language for user  """
 
-    incoming_request = request.query_string.decode('utf-8').split('&')
-    request_table = dict(map(
-        lambda x: (x if '=' in x else '{}='.format(x)).split('='),
-        incoming_request,
-    ))
-
+    request_table = request.args
     if 'locale' in request_table:
         if request_table['locale'] in app.config["LANGUAGES"]:
             return request_table['locale']
