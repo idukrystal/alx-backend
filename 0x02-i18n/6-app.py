@@ -69,4 +69,4 @@ def get_locale() -> str:
 def index() -> str:
     """ Renders homepage of web app uses babel to support translation """
 
-    return render_template("5-index.html")
+    return render_template("6-index.html")
