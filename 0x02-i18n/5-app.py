@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ A simple flask apllication with flask_babel """
 
-from flask import Flask, render_template, request
+from flask import Flask, g, render_template, request
 from flask_babel import Babel
 
 
@@ -20,16 +20,36 @@ app.config.from_object(Config)
 babel = Babel(app)
 
 
+users = {
+    1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
+    2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
+    3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},
+    4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
+}
+
+
+def get_user():
+    """ returns user details from http request """
+    if "login_as" in request.args:
+        login_id = request.args["login_as"]
+        if login_id.isdigit() and int(login_id) in users:
+            return users[int(login_id)]
+    return None
+
+
+@app.before_request
+def before_request() -> None:
+    """ Excutes befofe app start tries to get a user """
+    user = get_user()
+    if user is not None:
+        g.user = user
+
+
 @babel.localeselector
 def get_locale() -> str:
     """ Selects best language for user  """
 
-    incoming_request = request.query_string.decode('utf-8').split('&')
-    request_table = dict(map(
-        lambda x: (x if '=' in x else '{}='.format(x)).split('='),
-        incoming_request,
-    ))
-
+    request_table = request.args
     if 'locale' in request_table:
         if request_table['locale'] in app.config["LANGUAGES"]:
             return request_table['locale']
@@ -41,4 +61,4 @@ def get_locale() -> str:
 def index() -> str:
     """ Renders homepage of web app uses babel to support translation """
 
-    return render_template("4-index.html")
+    return render_template("5-index.html")
