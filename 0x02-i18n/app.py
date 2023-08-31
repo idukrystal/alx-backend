@@ -2,7 +2,7 @@
 """ A simple flask apllication with flask_babel """
 
 from flask import Flask, g, render_template, request
-from flask_babel import Babel
+from flask_babel import Babel, format_datetime
 from typing import Dict, Union
 import pytz
 
@@ -67,21 +67,16 @@ def get_locale() -> str:
 
 
 @babel.timezoneselector
-def get_timezone() -> str:
-    """ Gets the users timezone to formart time/dste properly  """
+def get_timezone():
     timezone = app.config['BABEL_DEFAULT_TIMEZONE']
     user = get_user()
     if user and user.get('timezone'):
-        try:
-            timezone = pytz.timezone(user.get('timezone')).zone
-        except pytz.exceptions.UnknownTimeZoneError:
-            pass
+        if user.get('timezone') in pytz.all_timezones:
+            timezone = user.get('timezone')
     if 'timezone' in request.args:
-        try:
-            timezone = pytz.timezone(request.args['timezone']).zone
-        except pytz.exceptions.UnknownTimeZoneError:
-            pass
-    return timezone
+        if request.args['timezone'] in pytz.all_timezones:
+            timezone = request.args['timezone']
+    return pytz.timezone(timezone).zone
 
 
 @app.route('/')
@@ -89,4 +84,5 @@ def get_timezone() -> str:
 def index() -> str:
     """ Renders homepage of web app uses babel to support translation """
 
-    return render_template("7-index.html")
+    date = format_datetime()
+    return render_template("index.html", date=str(date))
